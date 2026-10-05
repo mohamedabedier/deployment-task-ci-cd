@@ -1,4 +1,4 @@
-from pyspark.sql.functions import F
+from pyspark.sql import functions as F
 
 def clean_data(df):
     # 1. Remove rows where amount <= 0
