@@ -11,10 +11,13 @@ def spark():
 
 def test_clean_data(spark):
     mock_data = [
-        ("Alice", 100.0),  # good data
-        ("Bob", -50.0),    # bad data (-ve value)
-        ("Charlie", 0.0),  # bad data (0 value)
-        (None, 200.0)      # bad data (no name)
+        ("Alice1", 100.0),  # good data (low)
+        ("Alice2", 500.0),  # good data (mid)
+        ("Alice3", 9000.0), # good data (hige)
+        ("Bob", -50.0),     # bad data (-ve value)
+        ("Charlie", 0.0),   # bad data (0 value)
+        (None, 200.0)       # bad data (no name)
+        ("Ali", 12000.0)    # bad data (amont is more than 10000)
     ]
     columns = ["name", "amount"]
     df = spark.createDataFrame(mock_data, columns)
@@ -24,12 +27,31 @@ def test_clean_data(spark):
 
     # 3. check by Assert
     
-    # only one row are good data
-    assert len(results) == 1
+    # now become three rows are good data
+    assert len(results) == 3
     
-    valid_row = results[0]
+
+    # try all the 3 categories
+    # Alice1
+    assert results[0]["name"] == "Alice"
+    assert results[0]["amount"] == 100.0
     
-    assert valid_row["name"] == "Alice"
-    assert valid_row["amount"] == 100.0
+    assert results[0]["amount_with_tax"] == 120.0
+
+    assert results[0]["amount_category"] == "low"
+
+    # Alice2
+    assert results[1]["name"] == "Alice"
+    assert results[1]["amount"] == 500.0
     
-    assert valid_row["amount_with_tax"] == 120.0
+    assert results[1]["amount_with_tax"] == 600.0
+
+    assert results[1]["amount_category"] == "mid"
+
+    # Alice3
+    assert results[2]["name"] == "Alice"
+    assert results[2]["amount"] == 900.0
+    
+    assert results[2]["amount_with_tax"] == 1080.0
+
+    assert results[2]["amount_category"] == "high"
