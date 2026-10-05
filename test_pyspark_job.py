@@ -16,7 +16,7 @@ def test_clean_data(spark):
         ("Alice3", 9000.0), # good data (hige)
         ("Bob", -50.0),     # bad data (-ve value)
         ("Charlie", 0.0),   # bad data (0 value)
-        (None, 200.0)       # bad data (no name)
+        (None, 200.0),      # bad data (no name)
         ("Ali", 12000.0)    # bad data (amont is more than 10000)
     ]
     columns = ["name", "amount"]
@@ -33,7 +33,7 @@ def test_clean_data(spark):
 
     # try all the 3 categories
     # Alice1
-    assert results[0]["name"] == "Alice"
+    assert results[0]["name"] == "Alice1"
     assert results[0]["amount"] == 100.0
     
     assert results[0]["amount_with_tax"] == 120.0
@@ -41,7 +41,7 @@ def test_clean_data(spark):
     assert results[0]["amount_category"] == "low"
 
     # Alice2
-    assert results[1]["name"] == "Alice"
+    assert results[1]["name"] == "Alice2"
     assert results[1]["amount"] == 500.0
     
     assert results[1]["amount_with_tax"] == 600.0
@@ -49,9 +49,9 @@ def test_clean_data(spark):
     assert results[1]["amount_category"] == "mid"
 
     # Alice3
-    assert results[2]["name"] == "Alice"
-    assert results[2]["amount"] == 900.0
+    assert results[2]["name"] == "Alice3"
+    assert results[2]["amount"] == 9000.0
     
-    assert results[2]["amount_with_tax"] == 1080.0
+    assert results[2]["amount_with_tax"] == 10800.0
 
     assert results[2]["amount_category"] == "high"
